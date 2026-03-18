@@ -22,9 +22,20 @@ function getInitialVisibility(): boolean {
 
 const MobileAnnouncementBanner = () => {
   const [isVisible, setIsVisible] = useState(getInitialVisibility);
+  const [scrolledPastHero, setScrolledPastHero] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0 });
   const { data: upcomingSessions = [] } = useUpcomingSessions();
   const location = useLocation();
+
+  // Only show after scrolling past the hero (matches StickyCtaBar threshold)
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolledPastHero(window.scrollY > 500);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Hide on certain pages
   const hideOnPages = ['/prep-materials-xk9m', '/member-portal', '/try-for-free'];
@@ -75,7 +86,7 @@ const MobileAnnouncementBanner = () => {
     setIsVisible(false);
   };
 
-  // Don't show if dismissed, no session, or on hidden pages
+  // Don't show if dismissed, no session, on hidden pages, or haven't scrolled past hero
   if (!isVisible || !nextSession || shouldHide) return null;
 
   const countdownText = timeRemaining.days > 0
@@ -83,7 +94,11 @@ const MobileAnnouncementBanner = () => {
     : `${timeRemaining.hours}h ${timeRemaining.minutes}m`;
 
   return (
-    <div className="lg:hidden fixed bottom-[68px] left-3 right-3 z-[44]">
+    <div className={`
+      lg:hidden fixed bottom-[68px] left-3 right-3 z-[44]
+      transition-all duration-300
+      ${scrolledPastHero ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 pointer-events-none'}
+    `}>
       {/* Minimal floating banner */}
       <div className="bg-[#1a1025]/95 backdrop-blur-md rounded-xl border border-white/10 shadow-xl shadow-black/20">
         <div className="px-4 py-2.5 flex items-center justify-between gap-3">
