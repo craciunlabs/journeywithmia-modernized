@@ -83,7 +83,7 @@ const MobileAnnouncementBanner = () => {
     : `${timeRemaining.hours}h ${timeRemaining.minutes}m`;
 
   return (
-    <div className="lg:hidden fixed bottom-3 left-3 right-3 z-[45]">
+    <div className="lg:hidden fixed bottom-[68px] left-3 right-3 z-[44]">
       {/* Minimal floating banner */}
       <div className="bg-[#1a1025]/95 backdrop-blur-md rounded-xl border border-white/10 shadow-xl shadow-black/20">
         <div className="px-4 py-2.5 flex items-center justify-between gap-3">

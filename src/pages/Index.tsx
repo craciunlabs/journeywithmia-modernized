@@ -13,6 +13,8 @@ import PricingSection from "@/components/PricingSection";
 import FaqSection from "@/components/FaqSection";
 import CtaSection from "@/components/CtaSection";
 import Footer from "@/components/Footer";
+import HowItWorksSection from "@/components/HowItWorksSection";
+import StickyCtaBar from "@/components/StickyCtaBar";
 import { initScrollDepthTracking } from "@/utils/analytics";
 import SEO from "@/components/SEO";
 import MobileAnnouncementBanner from "@/components/MobileAnnouncementBanner";
@@ -221,6 +223,7 @@ const Index = () => {
           <TrustBadges />
           <CountdownSection />
           <ProblemSection />
+          <HowItWorksSection />
           <BenefitsSection />
           <TransformationGrid />
           <MainTestimonialGrid />
@@ -231,6 +234,7 @@ const Index = () => {
           <CtaSection />
         </main>
         <Footer />
+        <StickyCtaBar />
       </div>
     </>
   );

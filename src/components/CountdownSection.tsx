@@ -73,72 +73,66 @@ const CountdownSection = () => {
     return () => clearInterval(interval);
   }, [nextSession]);
 
-  const scrollToPricing = () => {
-    const el = document.getElementById('pricing');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
-
   const units = [
     { label: 'Days', value: timeRemaining.days },
-    { label: 'Hours', value: timeRemaining.hours },
+    { label: 'Hrs', value: timeRemaining.hours },
     { label: 'Min', value: timeRemaining.minutes },
     { label: 'Sec', value: timeRemaining.seconds },
   ];
 
   return (
-    <section className="py-10 sm:py-14 bg-gradient-to-br from-[var(--jwm-purple-900)] via-indigo-900 to-blue-900 relative overflow-hidden">
+    <section className="py-6 sm:py-8 bg-[var(--jwm-purple-900)] relative overflow-hidden">
       <div className="container mx-auto px-5 relative z-10">
-        {/* Top bar */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-4 py-2 mb-5">
-            <Clock className="w-4 h-4 text-white/70" />
-            <span className="text-white/70 text-sm font-medium">Live from Sweden</span>
-            <span className="text-white/40 mx-1">|</span>
-            <Link
-              to="/schedule"
-              className="inline-flex items-center gap-1 text-white/70 text-sm font-medium hover:text-white transition-colors"
-            >
-              <Calendar className="w-3.5 h-3.5" />
-              <span>Full Schedule →</span>
-            </Link>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+          {/* Left: text */}
+          <div className="text-center sm:text-left">
+            <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
+              <Clock className="w-3.5 h-3.5 text-white/60" />
+              <span className="text-white/60 text-xs font-medium uppercase tracking-wider">Next Live Session</span>
+            </div>
+            <p className="text-white text-sm sm:text-base font-medium">
+              {nextSession
+                ? <>{formatSessionDate(nextSession.date)} at {formatSessionTime(nextSession.time)} Sweden</>
+                : <>6:30 PM Sweden time</>
+              }
+            </p>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3">
-            Next Class Starts In
-          </h2>
+          {/* Divider */}
+          <div className="hidden sm:block w-px h-10 bg-white/20" />
 
-          <p className="text-white/70 text-sm sm:text-base max-w-2xl mx-auto">
-            {nextSession
-              ? <>Join us {formatSessionDate(nextSession.date)} at {formatSessionTime(nextSession.time)} Sweden time</>
-              : <>Join us for a transformative spiritual journey at 6:30 PM Sweden time</>
-            }
-          </p>
-        </div>
-
-        {/* Countdown — compact grid */}
-        <div className="flex justify-center items-center gap-3 sm:gap-5 mb-10">
-          {units.map((unit) => (
-            <div key={unit.label} className="text-center">
-              <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl px-4 py-3 sm:px-6 sm:py-4 min-w-[68px] sm:min-w-[90px]">
-                <div className="text-2xl sm:text-4xl font-bold text-white tabular-nums">
-                  {unit.value.toString().padStart(2, '0')}
+          {/* Center: countdown */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {units.map((unit, i) => (
+              <React.Fragment key={unit.label}>
+                <div className="text-center">
+                  <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-lg px-2.5 py-1.5 sm:px-3.5 sm:py-2 min-w-[48px] sm:min-w-[56px]">
+                    <div className="text-lg sm:text-2xl font-bold text-white tabular-nums leading-none">
+                      {unit.value.toString().padStart(2, '0')}
+                    </div>
+                  </div>
+                  <div className="text-white/40 text-[10px] sm:text-xs font-medium mt-1">
+                    {unit.label}
+                  </div>
                 </div>
-              </div>
-              <div className="text-white/50 text-xs sm:text-sm font-medium mt-1.5">
-                {unit.label}
-              </div>
-            </div>
-          ))}
-        </div>
+                {i < units.length - 1 && (
+                  <span className="text-white/30 text-lg font-light -mt-3">:</span>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
 
-        {/* CTA */}
-        <div className="text-center">
-          <button
-            onClick={scrollToPricing}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-7 py-3.5 rounded-full text-base font-semibold hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg min-h-[48px]"
+          {/* Divider */}
+          <div className="hidden sm:block w-px h-10 bg-white/20" />
+
+          {/* Right: schedule link */}
+          <Link
+            to="/schedule"
+            className="inline-flex items-center gap-1.5 text-white/70 text-xs sm:text-sm font-medium hover:text-white transition-colors bg-white/10 rounded-full px-4 py-2 border border-white/15"
           >
-            Reserve Your Spot
-          </button>
+            <Calendar className="w-3.5 h-3.5" />
+            Full Schedule →
+          </Link>
         </div>
       </div>
     </section>

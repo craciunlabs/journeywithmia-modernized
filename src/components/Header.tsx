@@ -61,7 +61,7 @@ const Header = () => {
                 isScrolled ? "text-purple-primary" : "text-white"
               }`}
             >
-              Journey with Mia
+              <span style={{ wordSpacing: '0.05em' }}>Journey with Mia</span>
             </h1>
           </Link>
 

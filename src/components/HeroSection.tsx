@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import { trackCTAClick } from "@/utils/analytics";
 
 const SplitHeroImg = "/lovable-uploads/hero-optimized.webp";
@@ -16,7 +16,7 @@ const HeroSection = () => {
       {/* Mobile: full-bleed image with overlay */}
       <div className="lg:hidden relative">
         {/* Image background */}
-        <div className="relative h-[420px] sm:h-[480px]">
+        <div className="relative h-[540px] sm:h-[560px]">
           <img
             src={SplitHeroImg}
             alt="Joyful group engaged together - Journey with Mia"
@@ -29,7 +29,7 @@ const HeroSection = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--jwm-purple-700)]/95 via-[var(--jwm-purple-600)]/60 to-transparent" />
 
           {/* Content over image */}
-          <div className="absolute inset-0 flex flex-col justify-end px-5 pb-8 pt-20">
+          <div className="absolute inset-0 flex flex-col justify-end px-5 pb-6 pt-20">
             <h1
               className="font-serif font-bold text-white text-[28px] sm:text-[34px] leading-[1.15] mb-4"
             >
@@ -52,6 +52,19 @@ const HeroSection = () => {
             <p className="text-white/60 text-xs mt-3 text-center sm:text-left">
               No pressure — cancel anytime. Everyone is welcome.
             </p>
+
+            {/* Social proof quote — mobile */}
+            <div className="mt-4 flex items-start gap-2.5 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/15">
+              <div className="flex gap-0.5 flex-shrink-0 mt-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={10} className="text-amber-400 fill-amber-400" />
+                ))}
+              </div>
+              <p className="text-white/80 text-xs leading-relaxed italic">
+                "Mia helped me believe in myself. She's genuine, warm and caring."
+                <span className="block text-white/50 not-italic mt-1">— Inger, member since 2024</span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -89,6 +102,19 @@ const HeroSection = () => {
             <p className="text-white/70 text-sm">
               No pressure — cancel anytime. Everyone is welcome.
             </p>
+
+            {/* Social proof quote — desktop */}
+            <div className="flex items-start gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-5 py-4 border border-white/15 max-w-md mt-1">
+              <div className="flex gap-0.5 flex-shrink-0 mt-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={12} className="text-amber-400 fill-amber-400" />
+                ))}
+              </div>
+              <p className="text-white/80 text-sm leading-relaxed italic">
+                "Mia helped me believe in myself. She's genuine, warm and caring."
+                <span className="block text-white/50 not-italic mt-1">— Inger, member since 2024</span>
+              </p>
+            </div>
           </div>
 
           <div className="w-1/2 flex justify-center items-center">
