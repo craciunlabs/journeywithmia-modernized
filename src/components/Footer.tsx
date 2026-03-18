@@ -7,7 +7,7 @@ const Footer = () => {
   const hideGetStartedButton = location.pathname === '/prep-materials-xk9m';
 
   return (
-    <footer className="bg-[var(--jwm-neutral-900)] text-white py-10 sm:py-14 pb-36 sm:pb-24 safe-area-bottom">
+    <footer className="bg-[var(--jwm-neutral-900)] text-white pt-10 sm:pt-14 !pb-[180px] sm:!pb-[160px] lg:!pb-24 safe-area-bottom">
       <div className="container mx-auto px-5 sm:px-6">
         {/* Top row: brand + links + CTA */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-8">
@@ -17,7 +17,7 @@ const Footer = () => {
               <span style={{ wordSpacing: '0.05em' }}>Journey with Mia</span>
             </h2>
             <p className="text-gray-400 text-xs max-w-[220px]">
-              Helping intuitive talents trust their gifts since 1996.
+              Helping you trust your intuitive talents since 1996.
             </p>
           </div>
 
@@ -55,7 +55,7 @@ const Footer = () => {
                 const el = document.getElementById("pricing");
                 if (el) el.scrollIntoView({ behavior: "smooth" });
               }}
-              className="hidden sm:inline-flex gold-button px-5 py-2 text-sm rounded-full"
+              className="gold-button px-5 py-2 text-sm rounded-full !hidden sm:!inline-flex"
             >
               Get Started Now ✨
             </a>
