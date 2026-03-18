@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 import TryForFree from "./pages/TryForFree";
+import Schedule from "./pages/Schedule";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/try-for-free" element={<TryForFree />} />
+          <Route path="/schedule" element={<Schedule />} />
           <Route path="*" element={<Index />} />
         </Routes>
       </BrowserRouter>

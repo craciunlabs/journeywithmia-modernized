@@ -20,6 +20,7 @@ import {
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
+import { CardTestimonial } from "@/components/RotatingTestimonial";
 import { useUpcomingSessions } from "@/hooks/useUpcomingSessions";
 import { trackCTAClick } from "@/utils/analytics";
 
@@ -559,24 +560,8 @@ const TryForFree = () => {
               ))}
             </div>
 
-            {/* Testimonial */}
-            <div className="mt-8 bg-purple-50/60 rounded-xl p-5 sm:p-6 text-center max-w-lg mx-auto">
-              <div className="flex justify-center gap-0.5 mb-3">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star
-                    key={i}
-                    size={16}
-                    className="text-amber-400 fill-amber-400"
-                  />
-                ))}
-              </div>
-              <blockquote className="font-serif italic text-gray-700 text-sm sm:text-base leading-relaxed mb-2">
-                "Mia helped me believe in myself. She's genuine, warm and caring."
-              </blockquote>
-              <cite className="not-italic text-xs text-gray-500">
-                — Inger, member since 2024
-              </cite>
-            </div>
+            {/* Rotating testimonial */}
+            <CardTestimonial className="mt-8" />
           </div>
         </section>
 

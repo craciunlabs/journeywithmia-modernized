@@ -1,6 +1,7 @@
 import React from "react";
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { trackCTAClick } from "@/utils/analytics";
+import { HeroTestimonial } from "@/components/RotatingTestimonial";
 
 const SplitHeroImg = "/lovable-uploads/hero-optimized.webp";
 
@@ -53,18 +54,8 @@ const HeroSection = () => {
               No pressure — cancel anytime. Everyone is welcome.
             </p>
 
-            {/* Social proof quote — mobile */}
-            <div className="mt-4 flex items-start gap-2.5 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/15">
-              <div className="flex gap-0.5 flex-shrink-0 mt-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={10} className="text-amber-400 fill-amber-400" />
-                ))}
-              </div>
-              <p className="text-white/80 text-xs leading-relaxed italic">
-                "Mia helped me believe in myself. She's genuine, warm and caring."
-                <span className="block text-white/50 not-italic mt-1">— Inger, member since 2024</span>
-              </p>
-            </div>
+            {/* Social proof quote — mobile (rotating) */}
+            <HeroTestimonial size="sm" className="mt-4" />
           </div>
         </div>
       </div>
@@ -103,18 +94,8 @@ const HeroSection = () => {
               No pressure — cancel anytime. Everyone is welcome.
             </p>
 
-            {/* Social proof quote — desktop */}
-            <div className="flex items-start gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-5 py-4 border border-white/15 max-w-md mt-1">
-              <div className="flex gap-0.5 flex-shrink-0 mt-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={12} className="text-amber-400 fill-amber-400" />
-                ))}
-              </div>
-              <p className="text-white/80 text-sm leading-relaxed italic">
-                "Mia helped me believe in myself. She's genuine, warm and caring."
-                <span className="block text-white/50 not-italic mt-1">— Inger, member since 2024</span>
-              </p>
-            </div>
+            {/* Social proof quote — desktop (rotating) */}
+            <HeroTestimonial size="md" className="max-w-md mt-1" />
           </div>
 
           <div className="w-1/2 flex justify-center items-center">
