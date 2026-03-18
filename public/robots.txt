@@ -1,0 +1,34 @@
+
+User-agent: Googlebot
+Allow: /
+Disallow: /members109881
+Disallow: /yearly71994
+Disallow: /prep-materials-xk9m
+
+User-agent: Bingbot
+Allow: /
+Disallow: /members109881
+Disallow: /yearly71994
+Disallow: /prep-materials-xk9m
+
+User-agent: Twitterbot
+Allow: /
+Disallow: /members109881
+Disallow: /yearly71994
+Disallow: /prep-materials-xk9m
+
+User-agent: facebookexternalhit
+Allow: /
+Disallow: /members109881
+Disallow: /yearly71994
+Disallow: /prep-materials-xk9m
+
+User-agent: *
+Allow: /
+Disallow: /members109881
+Disallow: /yearly71994
+Disallow: /prep-materials-xk9m
+Disallow: /member-portal
+Disallow: /session-recordings
+Disallow: /upcoming-sessions
+Disallow: /custom-feedback
