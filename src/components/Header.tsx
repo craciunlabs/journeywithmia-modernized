@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sparkles } from "lucide-react";
 import { trackCTAClick } from "@/utils/analytics";
 
 const Header = () => {
@@ -27,12 +27,8 @@ const Header = () => {
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleTryForFreeClick = (e: React.MouseEvent) => {
+  const handleTryForFreeClick = () => {
     trackCTAClick('Try For Free', 'header');
-    if (location.pathname === '/') {
-      e.preventDefault();
-      scrollToPricing();
-    }
   };
 
   const handleJoinNowClick = (e: React.MouseEvent) => {
@@ -86,9 +82,9 @@ const Header = () => {
                     isScrolled
                       ? "bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100"
                       : "bg-white/10 text-white border border-white/30 hover:bg-white/20"
-                  } transition-all duration-200 text-sm font-medium px-4 py-2 rounded-full min-h-[40px] inline-flex items-center backdrop-blur-sm`}
+                  } transition-all duration-200 text-sm font-medium px-4 py-2 rounded-full min-h-[40px] inline-flex items-center gap-1.5 backdrop-blur-sm`}
                 >
-                  🎁 Try Free
+                  <Sparkles size={14} className="opacity-70" /> Try a Session
                 </Link>
                 <button
                   onClick={handleJoinNowClick}
@@ -142,9 +138,9 @@ const Header = () => {
                 <Link
                   to="/try-for-free"
                   onClick={handleTryForFreeClick}
-                  className="text-purple-700 font-medium py-3 px-4 rounded-xl bg-purple-50 hover:bg-purple-100 transition-colors text-center"
+                  className="text-purple-700 font-medium py-3 px-4 rounded-xl bg-purple-50 hover:bg-purple-100 transition-colors text-center flex items-center justify-center gap-2"
                 >
-                  🎁 Try a Free Session
+                  <Sparkles size={16} className="text-purple-400" /> Try a Free Session
                 </Link>
               )}
               <Link
