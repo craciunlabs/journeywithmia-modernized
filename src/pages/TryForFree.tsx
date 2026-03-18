@@ -128,7 +128,7 @@ const TryForFree = () => {
   const sessions = useFormattedSessions();
   const [showAllSessions, setShowAllSessions] = useState(false);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ name: "", email: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", howHeard: "" });
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -157,7 +157,7 @@ const TryForFree = () => {
     setTimeout(() => {
       setIsSubmitting(false);
       setFormSubmitted(true);
-      setFormData({ name: "", email: "" });
+      setFormData({ name: "", email: "", howHeard: "" });
     }, 1200);
   };
 
@@ -392,7 +392,7 @@ const TryForFree = () => {
                               Takes 10 seconds. No payment info required.
                             </p>
 
-                            <div className="grid sm:grid-cols-2 gap-3 mb-4">
+                            <div className="grid sm:grid-cols-2 gap-3 mb-3">
                               <div>
                                 <label className="sr-only" htmlFor="reg-name">
                                   Full name
@@ -436,6 +436,42 @@ const TryForFree = () => {
                                     className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--jwm-purple-300)] focus:border-transparent"
                                   />
                                 </div>
+                              </div>
+                            </div>
+
+                            {/* How did you find us — optional */}
+                            <div className="mb-4">
+                              <label className="sr-only" htmlFor="reg-how-heard">
+                                How did you find us?
+                              </label>
+                              <div className="relative">
+                                <Globe
+                                  size={16}
+                                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                                />
+                                <select
+                                  id="reg-how-heard"
+                                  value={formData.howHeard}
+                                  onChange={(e) =>
+                                    setFormData((d) => ({ ...d, howHeard: e.target.value }))
+                                  }
+                                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--jwm-purple-300)] focus:border-transparent bg-white appearance-none text-gray-500"
+                                  style={{
+                                    color: formData.howHeard ? '#111827' : undefined,
+                                  }}
+                                >
+                                  <option value="">How did you find us? (optional)</option>
+                                  <option value="google">Google Search</option>
+                                  <option value="instagram">Instagram</option>
+                                  <option value="facebook">Facebook</option>
+                                  <option value="youtube">YouTube</option>
+                                  <option value="friend">Friend or Family</option>
+                                  <option value="other">Other</option>
+                                </select>
+                                <ChevronDown
+                                  size={16}
+                                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                                />
                               </div>
                             </div>
 
