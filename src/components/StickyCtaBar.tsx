@@ -30,7 +30,7 @@ const StickyCtaBar = () => {
       `}
     >
       {/* Desktop: minimal bar */}
-      <div className="hidden sm:block bg-[var(--jwm-purple-900)]/95 backdrop-blur-md border-t border-white/10">
+      <div className="hidden sm:block backdrop-blur-md border-t border-white/10" style={{ backgroundColor: 'rgba(61, 37, 99, 0.95)' }}>
         <div className="container mx-auto px-6 py-3 flex items-center justify-between">
           <p className="text-white/80 text-sm">
             <span className="font-medium text-white">Join Journey with Mia</span>
