@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Check, Loader2 } from "lucide-react";
+import { Check, Loader2, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useUpcomingSessions } from '@/hooks/useUpcomingSessions';
 import { trackCheckoutClick, trackCTAClick } from '@/utils/analytics';
@@ -12,7 +12,6 @@ const PricingSection = () => {
   const nextSession = upcomingSessions.length > 0 ? upcomingSessions[0] : null;
   const { startCheckout, isLoading } = useStripeCheckout();
   const [loadingPlan, setLoadingPlan] = useState<'monthly' | 'yearly' | null>(null);
-  const [activeTab, setActiveTab] = useState<'yearly' | 'monthly'>('yearly');
 
   const handleCheckout = async (plan: 'monthly' | 'yearly') => {
     setLoadingPlan(plan);
@@ -21,9 +20,28 @@ const PricingSection = () => {
     setLoadingPlan(null);
   };
 
+  const sharedFeatures = [
+    "3 Live Sessions Monthly",
+    "Access to All Recordings",
+    "Community Access",
+  ];
+
+  const monthlyExtras = [
+    "Gift 1-month free to a friend",
+    "Cancel Anytime",
+  ];
+
+  const yearlyExtras = [
+    "Everything in Monthly",
+    "3 Gift Invites (30-day trials)",
+    "Priority During Q&A",
+    "Lock in Current Pricing",
+    "10% off Mia's Services*",
+  ];
+
   return (
     <section className="bg-gray-50 section-padding" id="pricing">
-      <div className="container mx-auto px-5 sm:px-0">
+      <div className="container mx-auto px-5 sm:px-6">
         {/* Next class badge */}
         <div className="flex justify-center mb-5">
           <div className="inline-flex items-center gap-2 bg-purple-primary/90 text-white font-semibold px-4 py-2 rounded-full shadow-sm border border-amber-400/60 text-xs sm:text-sm tracking-wide uppercase">
@@ -32,13 +50,11 @@ const PricingSection = () => {
           </div>
         </div>
 
-        <div className="text-center mb-6">
+        <div className="text-center mb-8 sm:mb-10">
           <h2 className="font-serif text-purple-primary text-2xl sm:text-3xl md:text-4xl font-bold mb-3">
             Choose Your Plan
           </h2>
-
-          {/* Try For Free link — subtle, not competing */}
-          <p className="text-gray-500 text-sm mb-5">
+          <p className="text-gray-500 text-sm">
             Not sure?{" "}
             <button
               onClick={() => {
@@ -50,144 +66,117 @@ const PricingSection = () => {
               Try one session free
             </button>
           </p>
+        </div>
 
-          {/* Toggle switch */}
-          <div className="inline-flex items-center bg-white rounded-full p-1 border border-gray-200 shadow-sm mb-8">
-            <button
-              onClick={() => setActiveTab('monthly')}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                activeTab === 'monthly'
-                  ? 'bg-purple-primary text-white shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setActiveTab('yearly')}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${
-                activeTab === 'yearly'
-                  ? 'bg-purple-primary text-white shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Yearly
-              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
-                activeTab === 'yearly'
-                  ? 'bg-white/20 text-white'
-                  : 'bg-green-100 text-green-700'
-              }`}>
-                -42%
+        {/* Two cards side-by-side (stacked on mobile, yearly first) */}
+        <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 items-start">
+
+          {/* ── Yearly Plan (shown first on mobile, recommended) ── */}
+          <div className="relative bg-white rounded-2xl shadow-lg p-6 sm:p-8 border-2 border-purple-200 order-1 md:order-2">
+            {/* Best value badge */}
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+              <span className="bg-purple-600 text-white text-xs px-4 py-1.5 rounded-full font-semibold tracking-wide shadow-md flex items-center gap-1.5 whitespace-nowrap">
+                <Star size={12} className="fill-current" />
+                BEST VALUE
               </span>
+            </div>
+
+            <div className="text-center mb-5 mt-3">
+              <h3 className="text-lg font-bold text-gray-900 mb-3">Yearly Membership</h3>
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <span className="text-gray-400 line-through text-sm">€420</span>
+                <span className="bg-green-100 text-green-700 text-xs px-2.5 py-0.5 rounded-full font-semibold">
+                  Save €180
+                </span>
+              </div>
+              <div className="flex items-baseline justify-center">
+                <span className="text-4xl sm:text-5xl font-bold text-gray-900">€240</span>
+                <span className="text-gray-500 ml-1">/year</span>
+              </div>
+              <p className="text-sm text-gray-500 mt-1">
+                That's only <span className="font-semibold text-purple-600">€20/month</span>
+              </p>
+            </div>
+
+            <ul className="space-y-2.5 mb-6 text-sm">
+              {yearlyExtras.map((item, i) => (
+                <li key={item} className={`flex items-center gap-3 ${i === 0 ? 'p-2.5 bg-purple-50 rounded-lg' : ''}`}>
+                  <div className={`w-5 h-5 ${i === 0 ? 'bg-purple-600' : 'bg-green-500'} rounded-full flex items-center justify-center flex-shrink-0`}>
+                    <Check className="text-white" size={12} />
+                  </div>
+                  <span className={i === 0 ? 'font-medium text-gray-900' : 'text-gray-700'}>{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            <button
+              onClick={() => handleCheckout('yearly')}
+              disabled={isLoading}
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200 shadow-sm text-base disabled:opacity-70 min-h-[48px]"
+            >
+              {loadingPlan === 'yearly' ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
+              ) : (
+                'Get Yearly Access'
+              )}
             </button>
+            <p className="text-xs text-center mt-3 text-gray-400">
+              One payment · Instant access · Best deal
+            </p>
+          </div>
+
+          {/* ── Monthly Plan ── */}
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8 order-2 md:order-1">
+            <div className="text-center mb-5">
+              <h3 className="text-lg font-bold text-gray-900 mb-3">Monthly Membership</h3>
+              <div className="flex items-baseline justify-center">
+                <span className="text-4xl sm:text-5xl font-bold text-gray-900">€35</span>
+                <span className="text-gray-500 ml-1">/month</span>
+              </div>
+              <p className="text-sm text-gray-500 mt-1">Billed monthly · Cancel anytime</p>
+            </div>
+
+            <ul className="space-y-2.5 mb-6 text-sm">
+              {[...sharedFeatures, ...monthlyExtras].map((item) => (
+                <li key={item} className="flex items-start gap-3">
+                  <Check className="text-green-500 mt-0.5 flex-shrink-0" size={16} />
+                  <span className="text-gray-700">{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            <button
+              onClick={() => handleCheckout('monthly')}
+              disabled={isLoading}
+              className="primary-button w-full text-base py-3 flex items-center justify-center gap-2 disabled:opacity-70 min-h-[48px]"
+            >
+              {loadingPlan === 'monthly' ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
+              ) : (
+                'Join Monthly'
+              )}
+            </button>
+            <p className="text-xs text-center mt-3 text-gray-400">No long-term commitment</p>
           </div>
         </div>
 
-        {/* Pricing card — single card that switches */}
-        <div className="max-w-md mx-auto">
-          {activeTab === 'monthly' ? (
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8 animate-fadeIn">
-              <div className="text-center mb-5">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Monthly Membership</h3>
-                <div className="flex items-baseline justify-center">
-                  <span className="text-4xl sm:text-5xl font-bold text-gray-900">€35</span>
-                  <span className="text-gray-500 ml-1">/month</span>
-                </div>
-                <p className="text-sm text-gray-500 mt-1">Billed monthly · Cancel anytime</p>
-              </div>
-
-              <ul className="space-y-3 mb-6 text-sm">
-                {[
-                  "3 Live Sessions Monthly",
-                  "Gift 1-month free to a friend",
-                  "Access to All Recordings",
-                  "Community Access",
-                  "Cancel Anytime"
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <Check className="text-green-500 mt-0.5 flex-shrink-0" size={16} />
-                    <span className="text-gray-700">{item}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                onClick={() => handleCheckout('monthly')}
-                disabled={isLoading}
-                className="primary-button w-full text-base py-3 flex items-center justify-center gap-2 disabled:opacity-70"
-              >
-                {loadingPlan === 'monthly' ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
-                ) : (
-                  'Join Monthly'
-                )}
-              </button>
-              <p className="text-xs text-center mt-3 text-gray-400">No long-term commitment</p>
-            </div>
-          ) : (
-            <div className="relative bg-white rounded-2xl shadow-lg p-6 sm:p-8 animate-fadeIn border-2 border-purple-200">
-              {/* Best value badge */}
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <span className="bg-purple-600 text-white text-xs px-4 py-1.5 rounded-full font-semibold tracking-wide shadow-md">
-                  BEST VALUE
-                </span>
-              </div>
-
-              <div className="text-center mb-5 mt-2">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Yearly Membership</h3>
-                <div className="flex items-center justify-center gap-2 mb-1">
-                  <span className="text-gray-400 line-through text-sm">€420</span>
-                  <span className="bg-green-100 text-green-700 text-xs px-2.5 py-0.5 rounded-full font-medium">
-                    Save €180
-                  </span>
-                </div>
-                <div className="flex items-baseline justify-center">
-                  <span className="text-4xl sm:text-5xl font-bold text-gray-900">€240</span>
-                  <span className="text-gray-500 ml-1">/year</span>
-                </div>
-                <p className="text-sm text-gray-500 mt-1">
-                  That's only <span className="font-semibold text-purple-600">€20/month</span>
+        {/* Quick comparison callout (mobile-friendly) */}
+        <div className="max-w-3xl mx-auto mt-6">
+          <div className="bg-purple-50 border border-purple-100 rounded-xl p-4 sm:p-5">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-center sm:text-left">
+              <div>
+                <p className="text-sm font-semibold text-purple-800">Why yearly?</p>
+                <p className="text-xs text-purple-700 mt-0.5">
+                  Save 42% — pay €20/mo instead of €35/mo, plus get priority Q&A and 3 gift invites.
                 </p>
               </div>
-
-              <ul className="space-y-3 mb-6 text-sm">
-                <li className="flex items-center gap-3 p-2.5 bg-purple-50 rounded-lg">
-                  <div className="w-5 h-5 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Check className="text-white" size={12} />
-                  </div>
-                  <span className="font-medium text-gray-900">Everything in Monthly</span>
-                </li>
-                {[
-                  "3 Gift Invites (30-day trials)",
-                  "Priority During Q&A",
-                  "Lock in Current Pricing",
-                  "10% off Mia's Services*"
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-3">
-                    <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Check className="text-white" size={12} />
-                    </div>
-                    <span className="text-gray-700">{item}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                onClick={() => handleCheckout('yearly')}
-                disabled={isLoading}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-colors duration-200 shadow-sm text-base disabled:opacity-70 min-h-[48px]"
-              >
-                {loadingPlan === 'yearly' ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
-                ) : (
-                  'Get Yearly Access'
-                )}
-              </button>
-              <p className="text-xs text-center mt-3 text-gray-400">
-                One payment · Instant access · Best deal
-              </p>
+              <div className="flex-shrink-0">
+                <span className="inline-block bg-white text-purple-700 text-xs font-bold px-4 py-2 rounded-full border border-purple-200 shadow-sm">
+                  €20/mo vs €35/mo
+                </span>
+              </div>
             </div>
-          )}
+          </div>
         </div>
 
         {/* Value stack — below cards as supporting info */}
