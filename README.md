@@ -8,15 +8,15 @@ A premium, mobile-first landing site for [Journey with Mia](https://start.journe
 
 ## Tech Stack
 
-| Layer        | Technology                                       |
-| ------------ | ------------------------------------------------ |
-| Framework    | React 19 + TypeScript                            |
-| Bundler      | Vite 7                                           |
-| Styling      | Tailwind CSS 3 + CSS custom properties           |
-| UI primitives| Radix UI (Accordion, Dialog)                     |
-| Icons        | Lucide React                                     |
-| Routing      | React Router 7                                   |
-| Fonts        | Inter (body) + Playfair Display (headings) — Google Fonts |
+| Layer         | Technology                                       |
+| ------------- | ------------------------------------------------ |
+| Framework     | React 19 + TypeScript                            |
+| Bundler       | Vite 7                                           |
+| Styling       | Tailwind CSS 3 + CSS custom properties           |
+| UI primitives | Radix UI (Accordion, Dialog)                     |
+| Icons         | Lucide React                                     |
+| Routing       | React Router 7                                   |
+| Fonts         | Inter (body) + Playfair Display (headings) — Google Fonts |
 
 **No backend dependencies.** Supabase, Stripe, and analytics are stubbed out and ready for wiring. The site builds to a static bundle that can be served anywhere.
 
@@ -89,7 +89,7 @@ src/
 │   ├── FaqSection.tsx            # Accordion FAQ
 │   ├── CtaSection.tsx            # Bottom call-to-action
 │   ├── StickyCtaBar.tsx          # Fixed bottom CTA bar
-│   ├── MobileAnnouncementBanner.tsx  # Dismissible top banner (mobile)
+│   ├── MobileAnnouncementBanner.tsx  # Scroll-triggered "Try a free class" banner (mobile)
 │   ├── SEO.tsx                   # Meta tags + JSON-LD schema
 │   ├── ErrorBoundary.tsx         # React error boundary
 │   └── ui/                       # Radix UI primitives (button, dialog, accordion)
@@ -141,6 +141,18 @@ src/
 - `.tap-scale` — Scale-down feedback on tap (mobile)
 - `.section-padding` — Consistent section spacing
 
+### CSS Variables + Tailwind Caveat
+
+Tailwind opacity modifiers (`bg-[var(--jwm-purple-700)]/95`) do **not** work reliably with CSS custom properties. Use inline styles instead:
+
+```tsx
+// ❌ Won't work
+<div className="bg-[var(--jwm-purple-700)]/95" />
+
+// ✅ Works
+<div style={{ backgroundColor: 'rgba(55, 30, 90, 0.95)' }} />
+```
+
 ---
 
 ## What Was Built (Changelog)
@@ -190,11 +202,25 @@ src/
     - Session cards with local + Sweden time, guest teacher badges
     - "Ready to Join?" CTA with dual buttons
 
+### Session 7 — Comprehensive QA + Hero Stability
+14. **70+ device QA screenshots** — Tested all 3 pages across 14 device/viewport combinations:
+    - iPhones: SE (320px), 12 (390px), 13 (390px), 14 Pro Max (430px)
+    - Android: Pixel 7 (412px), Galaxy S9 (360px)
+    - Tablets: iPad Mini (768px), iPad Air (820px), iPad Pro 11" (834px), iPad Pro 12.9" (1024px)
+    - Desktop: 1280px, 1440px, 1920px, 2560px
+15. **Mobile announcement banner** — "Try a free class" banner now only appears after scrolling past 500px, preventing it from covering hero content on load.
+16. **Hero testimonial stability** — Fixed layout shift caused by rotating testimonials of different lengths. Testimonial container now uses a fixed height (`4.5rem` / `5rem`) with `overflow: hidden` so the hero never bounces.
+17. **Hero readability improvements:**
+    - Replaced fixed-height hero (`h-[540px]`) with content-driven layout using padding, preventing content clipping
+    - Replaced broken Tailwind gradient with inline `linear-gradient` for a stronger, more reliable dark overlay
+    - Added `drop-shadow` to hero heading and body text
+    - Increased body text opacity from 85% to 90%
+
 ---
 
 ## Stubs to Wire Up
 
-These are ready for backend integration. Each has clear TODO comments in the code.
+These are ready for backend integration. Each has clear TODO comments in the code. See [MIGRATION.md](./MIGRATION.md) for the complete migration playbook.
 
 ### 1. Supabase — Session Data
 **File:** `src/hooks/useUpcomingSessions.ts`
@@ -211,7 +237,7 @@ const { data, error } = await supabase
 ```
 
 ### 2. Supabase — Free Trial Registration
-**File:** `src/pages/TryForFree.tsx` (line ~151, `handleSubmit`)
+**File:** `src/pages/TryForFree.tsx` (line ~152, `handleSubmit`)
 
 Currently simulates submission with `setTimeout`. Replace with:
 
@@ -270,6 +296,7 @@ VITE_STRIPE_PUBLISHABLE_KEY=pk_live_xxx
 - **Session times** — All sessions are 6:30 PM Sweden time. The site auto-detects visitor timezone and shows both.
 - **Member Portal** — Links to `https://start.journeywithmia.com/member-portal` (external, managed by original app).
 - **Images** — All assets are in `public/lovable-uploads/`. The hero image, Mia's avatar, and video poster are optimized WebP.
+- **Form submission is a stub** — The Try for Free form shows a success screen but does not send emails or write to a database. The production site (`start.journeywithmia.com`) handles actual registrations with Supabase + email notifications.
 
 ---
 
