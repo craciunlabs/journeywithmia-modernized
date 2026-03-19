@@ -96,29 +96,33 @@ export function HeroTestimonial({
       : "flex items-start gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-5 py-4 border border-white/15";
 
   const textClass = size === "sm" ? "text-xs" : "text-sm";
-  const minH = size === "sm" ? "3rem" : "3.5rem";
+
+  // Fixed height prevents layout shift when testimonials rotate.
+  // Sized for the longest quote (~2.5 lines on small, ~2 lines on medium).
+  const fixedH = size === "sm" ? "4.5rem" : "5rem";
 
   return (
-    <div className={`${containerClass} ${className}`}>
+    <div className={`${containerClass} ${className}`} style={{ overflow: 'hidden' }}>
       <div className="flex gap-0.5 flex-shrink-0 mt-0.5">
         {[...Array(5)].map((_, i) => (
           <Star key={i} size={starSize} className="text-amber-400 fill-amber-400" />
         ))}
       </div>
-      <p
-        className={`${textClass} leading-relaxed italic text-white/80`}
-        style={{
-          transition: "opacity 400ms ease-in-out",
-          opacity: visible ? 1 : 0,
-          minHeight: minH,
-        }}
-      >
-        "{testimonial.quote}"
-        <span className="block text-white/50 not-italic mt-1">
-          — {testimonial.name}
-          {testimonial.since ? `, member since ${testimonial.since}` : ""}
-        </span>
-      </p>
+      <div style={{ height: fixedH, overflow: 'hidden' }}>
+        <p
+          className={`${textClass} leading-relaxed italic text-white/80`}
+          style={{
+            transition: "opacity 400ms ease-in-out",
+            opacity: visible ? 1 : 0,
+          }}
+        >
+          "{testimonial.quote}"
+          <span className="block text-white/50 not-italic mt-1">
+            — {testimonial.name}
+            {testimonial.since ? `, member since ${testimonial.since}` : ""}
+          </span>
+        </p>
+      </div>
     </div>
   );
 }

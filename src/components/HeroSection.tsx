@@ -16,8 +16,8 @@ const HeroSection = () => {
     <section className="purple-gradient relative overflow-hidden">
       {/* Mobile: full-bleed image with overlay */}
       <div className="lg:hidden relative">
-        {/* Image background */}
-        <div className="relative h-[540px] sm:h-[560px]">
+        {/* Image background — auto height, no clipping */}
+        <div className="relative">
           <img
             src={SplitHeroImg}
             alt="Joyful group engaged together - Journey with Mia"
@@ -26,19 +26,24 @@ const HeroSection = () => {
             fetchPriority="high"
             decoding="async"
           />
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--jwm-purple-700)]/95 via-[var(--jwm-purple-600)]/60 to-transparent" />
+          {/* Gradient overlay — inline styles for reliable opacity with CSS vars */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(to top, rgba(55, 30, 90, 0.97) 0%, rgba(75, 45, 115, 0.85) 35%, rgba(90, 55, 140, 0.5) 65%, transparent 100%)'
+            }}
+          />
 
           {/* Content over image */}
-          <div className="absolute inset-0 flex flex-col justify-end px-5 pb-6 pt-20">
+          <div className="relative flex flex-col justify-end px-5 pb-6 pt-[140px] sm:pt-[160px]">
             <h1
-              className="font-serif font-bold text-white text-[28px] sm:text-[34px] leading-[1.15] mb-4"
+              className="font-serif font-bold text-white text-[28px] sm:text-[34px] leading-[1.15] mb-3 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
             >
               You've Felt Spirit Your Whole Life.
               <span className="block mt-1">I'll Help You Finally Trust It.</span>
             </h1>
 
-            <p className="text-white/85 text-base sm:text-lg max-w-lg leading-relaxed mb-5">
+            <p className="text-white/90 text-[15px] sm:text-lg max-w-lg leading-relaxed mb-5 drop-shadow-[0_1px_3px_rgba(0,0,0,0.25)]">
               Awaken your own intuitive <span className="font-semibold text-white">talents</span>, in your own way.
               Mia guides you, but you're always in the driver's seat.
             </p>
@@ -54,7 +59,7 @@ const HeroSection = () => {
               No pressure — cancel anytime. Everyone is welcome.
             </p>
 
-            {/* Social proof quote — mobile (rotating) */}
+            {/* Social proof quote — mobile (rotating, fixed height) */}
             <HeroTestimonial size="sm" className="mt-4" />
           </div>
         </div>
