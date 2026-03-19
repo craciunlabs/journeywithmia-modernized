@@ -235,6 +235,27 @@ Tailwind opacity modifiers (`bg-[var(--jwm-purple-700)]/95`) do **not** work rel
 22. **404 Not Found page** — Branded 404 with large watermark numeral, friendly copy, and navigation buttons (Homepage, Try a Free Session, View Schedule). Responsive from mobile to desktop.
 23. **Route updates** — App.tsx expanded from 3 to 8 routes (plus wildcard 404 catch-all).
 
+### Session 9 — Legal Compliance (March 2026) + Social Links Fix
+24. **Terms & Conditions rewrite** — Expanded from 10 to 13 clauses with 2026 best practices:
+    - Introductory paragraph identifying data controller (Mia Ottosson, Sweden)
+    - Right of Withdrawal (EU Consumers) — 14-day cooling-off, waiver for immediate digital access, EU Directive 2023/2673 withdrawal button reference (effective June 19, 2026)
+    - Limitation of Liability — 12-month payment cap, no consequential damages
+    - Governing Law & Disputes — Swedish law, EU Online Dispute Resolution link
+    - Stripe payment processor disclosure
+    - 30-day advance notice for Terms changes
+25. **Privacy Policy rewrite** — Expanded from 8 to 13 clauses, fully GDPR Articles 13–14 compliant:
+    - Data Controller identification with contact details
+    - Lawful Bases table mapping every processing activity to GDPR Art. 6
+    - Data Processors table — Stripe, Supabase, Zoom, Vercel with locations
+    - International Data Transfers — EU-US DPF, SCCs, adequacy decisions
+    - Data Retention schedule with specific timeframes per data type
+    - Cookies & Tracking Technologies — categories, consent-first, reject/accept parity
+    - Comprehensive GDPR rights (Arts. 15–21) with DSAR response timeline
+    - Swedish supervisory authority (IMY) complaint right
+    - Children's Privacy (under-16 protection)
+    - Breach notification per GDPR Arts. 33–34
+26. **Social links corrected** — Instagram updated to `@miaottossonofficial`, YouTube updated to `@JourneyWithMia` in footer (affects all pages).
+
 ---
 
 ## Stubs to Wire Up
@@ -316,6 +337,9 @@ VITE_STRIPE_PUBLISHABLE_KEY=pk_live_xxx
 - **Member Portal** — Links to `https://start.journeywithmia.com/member-portal` (external, managed by original app).
 - **Images** — All assets are in `public/lovable-uploads/`. The hero image, Mia's avatar, and video poster are optimized WebP.
 - **Form submission is a stub** — The Try for Free form shows a success screen but does not send emails or write to a database. The production site (`start.journeywithmia.com`) handles actual registrations with Supabase + email notifications.
+- **Private Sittings form is a stub** — Booking form on `/private-sittings` shows a success screen but is not wired to any backend.
+- **Legal pages are production-ready** — Terms & Privacy content is written for March 2026 compliance (GDPR, EU Consumer Rights Directive, DSA). Have a legal professional review before relying on it as binding legal documentation.
+- **Social links** — Instagram: [@miaottossonofficial](https://www.instagram.com/miaottossonofficial/), YouTube: [@JourneyWithMia](https://www.youtube.com/@JourneyWithMia)
 
 ---
 

@@ -2,7 +2,7 @@
 
 A complete playbook for migrating from `craciunlabs/journeywithmia` (the Lovable-managed original) to `craciunlabs/journeywithmia-modernized` (the clean standalone redesign).
 
-**Status:** The modernized repo is a design/UX upgrade. All public-facing pages have been redesigned. Backend integrations (Supabase, Stripe, email notifications) are stubbed and ready for wiring. Member-only pages have not yet been ported.
+**Status:** The modernized repo is a full design/UX upgrade with 9 pages built (8 routes + wildcard 404). All public-facing pages have been redesigned, plus new pages for Terms & Privacy (2026-compliant), Yearly Benefits, Private Sittings, and Checkout Success. Backend integrations (Supabase, Stripe, email notifications) are stubbed and ready for wiring. Member-only pages (portal, auth, admin) have not yet been ported.
 
 ---
 
@@ -59,6 +59,11 @@ The modernized version intentionally dropped:
 | `/` | `Index.tsx` — Hero, pricing, FAQ, testimonials | `Index.tsx` — Completely redesigned with modern hero, rotating testimonials, video player, "How It Works", transformation grid, improved pricing cards | ✅ Redesigned |
 | `/try-for-free` | `TryForFree.tsx` — Multi-step modal registration form, hardcoded session dates | `TryForFree.tsx` — Inline session picker, single-step form, "How did you find us?", FAQ accordion | ✅ Redesigned |
 | `/schedule` | `Schedule.tsx` — Basic session list | `Schedule.tsx` — Premium calendar with month grouping, timezone auto-detection, guest teacher badges, countdown stats | ✅ Redesigned |
+| `/terms`, `/privacy` | Basic legal pages | `TermsAndPrivacy.tsx` — Combined page with nav pills, 13-clause Terms + 13-clause Privacy Policy, fully GDPR 2026-compliant | ✅ Built (Session 8–9) |
+| `/yearly-benefits` | Yearly plan benefits page | `YearlyBenefits.tsx` — Service cards, savings badge, crown hero | ✅ Built (Session 8) |
+| `/private-sittings` | Private sitting bookings | `PrivateSittings.tsx` — Sitting type selector, booking form (stubbed), important info | ✅ Built (Session 8) |
+| `/checkout-success` | Post-Stripe-checkout confirmation | `CheckoutSuccess.tsx` — Checkmark animation, numbered next steps, CTA buttons | ✅ Built (Session 8) |
+| `*` (404) | N/A | `NotFound.tsx` — Branded 404 with navigation options | ✅ Built (Session 8) |
 
 ### Member/Auth Pages (Not Yet Ported)
 
@@ -67,10 +72,7 @@ The modernized version intentionally dropped:
 | `/member-portal` | Full member dashboard — schedule, recordings, invitations, account status, admin panel | Not ported | High — port when wiring Supabase |
 | `/reset-password` | Password reset flow via Supabase Auth | Not ported | High — needed for auth |
 | `/invite/:token` | Member invitation acceptance page | Not ported | Medium |
-| `/checkout-success` | Post-Stripe-checkout confirmation | Not ported | Medium — port with Stripe |
 | `/session-recordings` | Session recording access (member-only) | Not ported | Medium |
-| `/terms`, `/privacy` | Legal pages | Not ported | Low — can copy directly |
-| `/yearly-benefits` | Yearly plan benefits page | Not ported | Low |
 
 ### Admin Pages (Not Yet Ported)
 
@@ -105,6 +107,11 @@ These features exist only in the modernized repo and were not in the original:
 12. **Content-driven hero layout** — No fixed heights, hero grows with content, drop-shadow text for readability
 13. **CSS custom properties** — Full brand color system (`--jwm-purple-50` through `--jwm-purple-900`, `--jwm-gold-400/500`)
 14. **SEO component** — Structured JSON-LD schema on every page
+15. **GDPR 2026-compliant Terms & Privacy** — 13-clause Terms (with EU withdrawal rights, limitation of liability, governing law) + 13-clause Privacy Policy (lawful bases table, data processors table, retention schedule, international transfers, cookie policy, DSAR process, IMY complaint right, children's privacy)
+16. **Yearly Benefits page** — Service cards with pricing, 10% discount badge, "Coming Soon" placeholders for future services
+17. **Private Sittings page** — Sitting type selector (Evidential Mediumship / Spiritual Assessment), pricing badge, booking info, cancellation policy
+18. **Checkout Success page** — Post-payment welcome flow with numbered next steps
+19. **Branded 404 page** — Large watermark numeral, friendly copy, navigation buttons
 
 ---
 
@@ -124,19 +131,25 @@ Before the modernized repo can fully replace the original, these need to be wire
 ### Important (Soon After Launch)
 
 - [ ] **Authentication** — Port Supabase Auth (email/password login, signup, reset)
-- [ ] **Checkout success page** — Port `/checkout-success`
 - [ ] **Invitation system** — Port `/invite/:token` and member invitation components
-- [ ] **Legal pages** — Port `/terms` and `/privacy`
 - [ ] **Analytics** — Replace console stubs with real provider (Plausible recommended)
+- [ ] **Cookie consent banner** — Implement CMP with prior-blocking for non-essential cookies (referenced in Privacy Policy)
+- [ ] **Wire Private Sittings form** — Connect `/private-sittings` booking form to Stripe + email notification
 
 ### Nice to Have (Later)
 
 - [ ] Admin dashboard pages
 - [ ] Session recordings access
 - [ ] Recorded courses
-- [ ] Private sittings
 - [ ] Mia AI chat
-- [ ] Yearly benefits page
+
+### Already Done ✅
+
+- [x] Checkout success page (`/checkout-success`) — Session 8
+- [x] Legal pages (`/terms`, `/privacy`) — Session 8, updated to 2026 compliance in Session 9
+- [x] Yearly benefits page (`/yearly-benefits`) — Session 8
+- [x] Private sittings page (`/private-sittings`) — Session 8 (form stubbed)
+- [x] 404 page — Session 8
 
 ---
 
