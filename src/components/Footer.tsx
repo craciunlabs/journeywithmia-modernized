@@ -35,12 +35,18 @@ const Footer = () => {
             >
               Schedule
             </Link>
-            <a href="/terms#terms" className="hover:text-amber-400 transition-colors text-sm">
+            <Link
+              to="/terms"
+              className="hover:text-amber-400 transition-colors text-sm"
+            >
               Terms
-            </a>
-            <a href="/terms#privacy" className="hover:text-amber-400 transition-colors text-sm">
+            </Link>
+            <Link
+              to="/privacy"
+              className="hover:text-amber-400 transition-colors text-sm"
+            >
               Privacy
-            </a>
+            </Link>
             <a href="mailto:mia@miaottosson.se" className="hover:text-amber-400 transition-colors text-sm">
               Contact
             </a>

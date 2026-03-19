@@ -54,11 +54,17 @@ npm run preview
 
 ## Pages & Routes
 
-| Route            | Page              | Description                                      |
-| ---------------- | ----------------- | ------------------------------------------------ |
-| `/`              | Index             | Main landing page — hero, social proof, pricing, FAQ |
-| `/try-for-free`  | TryForFree        | Free session registration — session picker + inline form |
-| `/schedule`      | Schedule          | Full upcoming session calendar grouped by month  |
+| Route              | Page              | Description                                      |
+| ------------------ | ----------------- | ------------------------------------------------ |
+| `/`                | Index             | Main landing page — hero, social proof, pricing, FAQ |
+| `/try-for-free`    | TryForFree        | Free session registration — session picker + inline form |
+| `/schedule`        | Schedule          | Full upcoming session calendar grouped by month  |
+| `/terms`           | TermsAndPrivacy   | Terms of Service (nav pills to switch sections)  |
+| `/privacy`         | TermsAndPrivacy   | Privacy Policy (shared page, different default tab) |
+| `/yearly-benefits` | YearlyBenefits    | Yearly membership benefits + savings breakdown   |
+| `/private-sittings`| PrivateSittings   | Private sittings info + booking form (stubbed)   |
+| `/checkout-success`| CheckoutSuccess   | Post-payment confirmation with next steps        |
+| `*`                | NotFound          | Branded 404 page with navigation options         |
 
 ---
 
@@ -69,7 +75,12 @@ src/
 ├── pages/
 │   ├── Index.tsx                 # Main landing page
 │   ├── TryForFree.tsx            # Free trial registration page
-│   └── Schedule.tsx              # Full schedule page
+│   ├── Schedule.tsx              # Full schedule page
+│   ├── TermsAndPrivacy.tsx       # Terms & Privacy (nav pills, numbered clauses)
+│   ├── YearlyBenefits.tsx        # Yearly benefits with service cards + savings
+│   ├── PrivateSittings.tsx       # Private sittings info + booking form (stub)
+│   ├── CheckoutSuccess.tsx       # Post-payment welcome with next steps
+│   └── NotFound.tsx              # Branded 404 page
 │
 ├── components/
 │   ├── Header.tsx                # Sticky header with nav + CTA buttons
@@ -215,6 +226,14 @@ Tailwind opacity modifiers (`bg-[var(--jwm-purple-700)]/95`) do **not** work rel
     - Replaced broken Tailwind gradient with inline `linear-gradient` for a stronger, more reliable dark overlay
     - Added `drop-shadow` to hero heading and body text
     - Increased body text opacity from 85% to 90%
+
+### Session 8 — Five New Pages
+18. **Terms & Privacy page** (`/terms`, `/privacy`) — Combined legal page with purple hero, nav pills to toggle between Terms of Service and Privacy Policy sections. Clean numbered clauses, readable typography.
+19. **Yearly Benefits page** (`/yearly-benefits`) — Showcases yearly membership perks: service cards for each benefit (group sessions, private sittings, recordings, community), yearly savings badge (save 17%), crown-themed hero.
+20. **Private Sittings page** (`/private-sittings`) — Information about private 1-on-1 sittings with Mia. Includes sitting type selector (Standard/Extended/Package), inline booking form (stubbed), what-to-expect section, and FAQ.
+21. **Checkout Success page** (`/checkout-success`) — Post-payment confirmation with checkmark animation, numbered "What happens next?" steps, CTA buttons for account creation and Facebook community.
+22. **404 Not Found page** — Branded 404 with large watermark numeral, friendly copy, and navigation buttons (Homepage, Try a Free Session, View Schedule). Responsive from mobile to desktop.
+23. **Route updates** — App.tsx expanded from 3 to 8 routes (plus wildcard 404 catch-all).
 
 ---
 
