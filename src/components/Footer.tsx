@@ -73,7 +73,7 @@ const Footer = () => {
           {/* Social links */}
           <div className="flex items-center gap-4">
             <a
-              href="https://www.instagram.com/mia_ottosson_medium/"
+              href="https://www.instagram.com/miaottossonofficial/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-500 hover:text-amber-400 transition-colors"
@@ -82,7 +82,7 @@ const Footer = () => {
               <Instagram size={18} />
             </a>
             <a
-              href="https://www.youtube.com/@MiaOttosson"
+              href="https://www.youtube.com/@JourneyWithMia"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-500 hover:text-amber-400 transition-colors"
