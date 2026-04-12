@@ -1,7 +1,11 @@
 /**
  * Shared session date/time formatting utilities.
  * Consolidated from 5+ component-level duplicates.
+ *
+ * Uses dynamic Stockholm offset detection for correct CET/CEST handling.
  */
+
+import { getStockholmOffset } from '@/hooks/useScheduleData';
 
 const getOrdinalSuffix = (day: number): string => {
   if (day > 3 && day < 21) return 'th';
@@ -66,4 +70,13 @@ export const formatSessionDateTime = (dateString: string, timeString: string): s
   const hour12 = hour24 > 12 ? hour24 - 12 : hour24 === 0 ? 12 : hour24;
   const ampm = hour24 >= 12 ? 'pm' : 'am';
   return `${datePart} ${hour12}:${minutes} ${ampm}`;
+};
+
+/**
+ * Create a Date object for a session in Stockholm timezone.
+ * Uses dynamic offset detection to handle CET (+01:00) / CEST (+02:00).
+ */
+export const getStockholmSessionDate = (isoDate: string, time = '18:30'): Date => {
+  const offset = getStockholmOffset(isoDate);
+  return new Date(`${isoDate}T${time}:00${offset}`);
 };

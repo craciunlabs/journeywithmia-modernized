@@ -14,6 +14,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { useUpcomingSessions } from "@/hooks/useUpcomingSessions";
+import { useScheduleData, getStockholmSessionDate } from "@/hooks/useScheduleData";
 
 /* ------------------------------------------------------------------ */
 /* Session formatting                                                  */
@@ -36,17 +37,20 @@ interface FormattedSession {
 }
 
 function useFormattedSchedule() {
-  const { data: rawSessions = [] } = useUpcomingSessions();
+  const { data: rawSessions = [], isLoading } = useUpcomingSessions();
+  const { classDates } = useScheduleData();
   const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   return useMemo(() => {
     const now = new Date();
 
-    const sessions: FormattedSession[] = rawSessions
-      .map((s) => {
+    // Use DB sessions if available, fall back to schedule data
+    const hasDbSessions = rawSessions.length > 0;
+
+    const sessions: FormattedSession[] = (hasDbSessions ? rawSessions : []).map((s) => {
         const dt = s.datetime_sweden
           ? new Date(s.datetime_sweden)
-          : new Date(`${s.date}T${s.time}:00+02:00`);
+          : getStockholmSessionDate(s.date, s.time);
 
         const isPast = dt < now;
 
@@ -118,7 +122,7 @@ function useFormattedSchedule() {
     }
 
     return { sessions, grouped, userTz };
-  }, [rawSessions, userTz]);
+  }, [rawSessions, classDates, userTz]);
 }
 
 /* ------------------------------------------------------------------ */

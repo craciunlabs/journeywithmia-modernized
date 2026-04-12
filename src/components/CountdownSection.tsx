@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Clock, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useUpcomingSessions } from '@/hooks/useUpcomingSessions';
+import { useScheduleData, getStockholmOffset } from '@/hooks/useScheduleData';
 import { formatSessionDate, formatSessionTime } from '@/utils/sessionDate';
 
 const CountdownSection = () => {
@@ -9,7 +10,8 @@ const CountdownSection = () => {
     days: 0, hours: 0, minutes: 0, seconds: 0
   });
 
-  const { data: upcomingSessions = [] } = useUpcomingSessions();
+  const { data: upcomingSessions = [], isLoading: sessionsLoading } = useUpcomingSessions();
+  const { fallbackSessionDates } = useScheduleData();
 
   const nextSession = useMemo(() => {
     const now = new Date();
@@ -19,7 +21,9 @@ const CountdownSection = () => {
         if (session.datetime_sweden) {
           sessionDateTime = new Date(session.datetime_sweden);
         } else {
-          sessionDateTime = new Date(`${session.date}T${session.time}:00+02:00`);
+          // Fallback: construct from date and time with dynamic Stockholm offset
+          const offset = getStockholmOffset(session.date);
+          sessionDateTime = new Date(`${session.date}T${session.time}:00${offset}`);
         }
         return { ...session, dateTime: sessionDateTime };
       })
@@ -34,20 +38,16 @@ const CountdownSection = () => {
     if (nextSession?.date && nextSession?.time) {
       targetDate = nextSession.dateTime;
     } else {
-      const fallbackDates = [
-        new Date('2026-03-31T18:30:00+02:00'),
-        new Date('2026-04-07T18:30:00+02:00'),
-        new Date('2026-04-14T18:30:00+02:00'),
-        new Date('2026-04-28T18:30:00+02:00'),
-        new Date('2026-05-05T18:30:00+02:00'),
-        new Date('2026-05-14T18:30:00+02:00'),
-        new Date('2026-05-19T18:30:00+02:00'),
-        new Date('2026-06-04T18:30:00+02:00'),
-        new Date('2026-06-16T18:30:00+02:00'),
-        new Date('2026-06-23T18:30:00+02:00'),
-      ];
+      // Fallback to the shared schedule — dynamically offset for CET/CEST
       const now = new Date();
-      targetDate = fallbackDates.find(d => d > now) || new Date(now.getTime() + 7 * 86400000);
+      const nextFallbackDate = fallbackSessionDates.find(date => date > now);
+
+      if (nextFallbackDate) {
+        targetDate = nextFallbackDate;
+      } else {
+        // If all fallback dates have passed, use a date 7 days from now
+        targetDate = new Date(now.getTime() + 7 * 86400000);
+      }
     }
 
     if (isNaN(targetDate.getTime())) {

@@ -6,9 +6,51 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import JuneScheduleModal from "./JuneScheduleModal";
+import { useScheduleData } from '@/hooks/useScheduleData';
 import { useUpcomingSessions } from '@/hooks/useUpcomingSessions';
 import { trackFAQClick } from '@/utils/analytics';
 import { formatSessionDateTime } from '@/utils/sessionDate';
+
+/** Renders the schedule FAQ answer dynamically from DB/static data */
+function DynamicScheduleAnswer() {
+  const { scheduleByMonth } = useScheduleData();
+  return (
+    <div>
+      {scheduleByMonth.map(block => (
+        <div key={block.month}>
+          <h4 className="font-medium text-purple-primary mb-2">{block.month}:</h4>
+          <ul className="list-disc ml-6 mb-3">
+            {block.sessions.map(s => (
+              <li key={s.isoDate}>
+                {s.date} — {s.time}
+                {s.hasGuest && s.guestName && (
+                  <><br className="sm:hidden" /><span className="text-amber-600 font-medium"> ⭐ Guest Teacher: {s.guestName}</span></>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      <p className="mt-2">
+        <strong>Each class lasts 60 to 90 minutes.</strong>
+      </p>
+      <p className="mt-2 text-sm">
+        <span className="font-semibold text-yellow-800">Check your local time zone:&nbsp;</span>
+        <a
+          href="https://dateful.com/time-zone-converter"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-purple-700 underline hover:text-purple-900"
+        >
+          dateful.com/time-zone-converter
+        </a>
+      </p>
+      <p className="mt-2 text-xs text-gray-500 italic">
+        <span className="text-red-700 font-medium">Important:</span> All dates are subject to change with advance notice.
+      </p>
+    </div>
+  );
+}
 
 const faqs = [
   {
@@ -67,59 +109,7 @@ const faqs = [
   },
   {
     question: "What is the class schedule and how long are the sessions?",
-    answer: (
-      <div>
-        <div>
-          <h4 className="font-medium text-purple-primary mb-2">March 2026:</h4>
-          <ul className="list-disc ml-6 mb-3">
-            <li>Monday, 9th March — 6:30pm to 8:00pm Sweden time<br className="sm:hidden" /><span className="text-amber-600 font-medium"> ⭐ Guest Teacher: Anneke</span></li>
-            <li>Tuesday, 17th March — 6:30pm to 8:00pm Sweden time</li>
-            <li>Tuesday, 31st March — 6:30pm to 8:00pm Sweden time</li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="font-medium text-purple-primary mb-2">April 2026:</h4>
-          <ul className="list-disc ml-6 mb-3">
-            <li>Tuesday, 7th April — 6:30pm to 8:00pm Sweden time</li>
-            <li>Tuesday, 14th April — 6:30pm to 8:00pm Sweden time<br className="sm:hidden" /><span className="text-amber-600 font-medium"> ⭐ Guest Teacher: Fredrik Haglund</span></li>
-            <li>Tuesday, 28th April — 6:30pm to 8:00pm Sweden time</li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="font-medium text-purple-primary mb-2">May 2026:</h4>
-          <ul className="list-disc ml-6 mb-3">
-            <li>Tuesday, 5th May — 6:30pm to 8:00pm Sweden time</li>
-            <li>Thursday, 14th May — 6:30pm to 8:00pm Sweden time<br className="sm:hidden" /><span className="text-amber-600 font-medium"> ⭐ Guest Teacher: Elinor Hedlund</span></li>
-            <li>Tuesday, 19th May — 6:30pm to 8:00pm Sweden time</li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="font-medium text-purple-primary mb-2">June 2026:</h4>
-          <ul className="list-disc ml-6 mb-3">
-            <li>Thursday, 4th June — 6:30pm to 8:00pm Sweden time<br className="sm:hidden" /><span className="text-amber-600 font-medium"> ⭐ Guest Teacher: Eva Schartner</span></li>
-            <li>Tuesday, 16th June — 6:30pm to 8:00pm Sweden time</li>
-            <li>Tuesday, 23rd June — 6:30pm to 8:00pm Sweden time</li>
-          </ul>
-        </div>
-        <p className="mt-2">
-          <strong>Each class lasts 60 to 90 minutes.</strong>
-        </p>
-        <p className="mt-2 text-sm">
-          <span className="font-semibold text-yellow-800">Check your local time zone:&nbsp;</span>
-          <a
-            href="https://dateful.com/time-zone-converter"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-purple-700 underline hover:text-purple-900"
-          >
-            dateful.com/time-zone-converter
-          </a>
-        </p>
-        <p className="mt-2 text-xs text-gray-500 italic">
-          <span className="text-red-700 font-medium">Important:</span> All dates are subject to change with advance notice.
-        </p>
-      </div>
-    ),
+    answer: "DYNAMIC_SCHEDULE",
   },
   {
     question: "Are the class days the same every month?",
@@ -204,6 +194,7 @@ const faqs = [
 const FaqSection = () => {
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const { data: upcomingSessions = [] } = useUpcomingSessions();
+  const { scheduleByMonth } = useScheduleData();
   const nextSession = upcomingSessions.length > 0 ? upcomingSessions[0] : null;
 
   const scrollToPricing = () => {
@@ -213,7 +204,7 @@ const FaqSection = () => {
 
   return (
     <section className="bg-gray-50 section-padding" id="faq">
-      <JuneScheduleModal open={scheduleOpen} onOpenChange={setScheduleOpen} />
+      <JuneScheduleModal open={scheduleOpen} onOpenChange={setScheduleOpen} scheduleByMonth={scheduleByMonth} />
       <div className="container mx-auto px-5 sm:px-6">
         <div className="text-center mb-8">
           <span className="inline-block bg-purple-50 text-purple-primary px-4 py-1 rounded-full text-xs sm:text-sm mb-3">
@@ -258,7 +249,7 @@ const FaqSection = () => {
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-4 text-gray-600 text-sm sm:text-base">
-                  {faq.answer}
+                  {faq.answer === "DYNAMIC_SCHEDULE" ? <DynamicScheduleAnswer /> : faq.answer}
                 </AccordionContent>
               </AccordionItem>
             ))}

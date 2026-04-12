@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useUpcomingSessions } from '@/hooks/useUpcomingSessions';
+import { getStockholmOffset } from '@/hooks/useScheduleData';
 import { trackCTAClick } from '@/utils/analytics';
 
 const STORAGE_KEY = 'mobileBannerDismissed';
@@ -50,7 +51,8 @@ const MobileAnnouncementBanner = () => {
         if (session.datetime_sweden) {
           sessionDateTime = new Date(session.datetime_sweden);
         } else {
-          sessionDateTime = new Date(`${session.date}T${session.time}:00+01:00`);
+          const offset = getStockholmOffset(session.date);
+          sessionDateTime = new Date(`${session.date}T${session.time}:00${offset}`);
         }
         return { ...session, dateTime: sessionDateTime };
       })

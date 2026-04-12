@@ -1,41 +1,48 @@
 /**
- * Standalone stub — returns static session data.
- * Replace with your Supabase/API call when wiring up the backend.
+ * useUpcomingSessions — fetches live session data from Supabase RPC.
+ *
+ * Calls `get_upcoming_sessions()` which returns session metadata
+ * (title, date, time, guest teacher info). Zoom links are only
+ * returned for active/trial members or admins (April 2026 security fix).
+ *
+ * For public pages this is used mainly by CountdownSection and
+ * MobileAnnouncementBanner to find the next upcoming session.
  */
 
-interface Session {
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
+interface UpcomingSession {
   id: string;
+  title: string;
+  description: string;
   date: string;
   time: string;
+  zoomLink: string;
   datetime_sweden?: string;
-  title?: string;
-  guest_teacher?: string;
+  hasGuest?: boolean;
+  guestName?: string;
 }
 
-const STATIC_SESSIONS: Session[] = [
-  { id: '1', date: '2026-03-31', time: '18:30', datetime_sweden: '2026-03-31T18:30:00+02:00' },
-  { id: '2', date: '2026-04-07', time: '18:30', datetime_sweden: '2026-04-07T18:30:00+02:00' },
-  { id: '3', date: '2026-04-14', time: '18:30', datetime_sweden: '2026-04-14T18:30:00+02:00', guest_teacher: 'Fredrik Haglund' },
-  { id: '4', date: '2026-04-28', time: '18:30', datetime_sweden: '2026-04-28T18:30:00+02:00' },
-  { id: '5', date: '2026-05-05', time: '18:30', datetime_sweden: '2026-05-05T18:30:00+02:00' },
-  { id: '6', date: '2026-05-14', time: '18:30', datetime_sweden: '2026-05-14T18:30:00+02:00', guest_teacher: 'Elinor Hedlund' },
-  { id: '7', date: '2026-05-19', time: '18:30', datetime_sweden: '2026-05-19T18:30:00+02:00' },
-  { id: '8', date: '2026-06-04', time: '18:30', datetime_sweden: '2026-06-04T18:30:00+02:00', guest_teacher: 'Eva Schartner' },
-  { id: '9', date: '2026-06-16', time: '18:30', datetime_sweden: '2026-06-16T18:30:00+02:00' },
-  { id: '10', date: '2026-06-23', time: '18:30', datetime_sweden: '2026-06-23T18:30:00+02:00' },
-];
+interface SessionsResponse {
+  success: boolean;
+  sessions: UpcomingSession[];
+}
 
-export function useUpcomingSessions() {
-  // Filter to only future sessions
-  const now = new Date();
-  const data = STATIC_SESSIONS.filter(s => {
-    const dt = s.datetime_sweden ? new Date(s.datetime_sweden) : new Date(`${s.date}T${s.time}:00+02:00`);
-    return dt > now;
+export const useUpcomingSessions = () => {
+  return useQuery({
+    queryKey: ['upcoming-sessions'],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('get_upcoming_sessions');
+
+      if (error) throw error;
+
+      // Type guard to ensure data has the expected structure
+      const response = data as unknown as SessionsResponse;
+      return response?.sessions || [];
+    },
+    staleTime: 5 * 60 * 1000,   // 5 min
+    gcTime: 30 * 60 * 1000,     // keep in cache 30 min
+    retry: 1,
   });
-
-  return {
-    data,
-    isLoading: false,
-    error: null,
-  };
-}
+};

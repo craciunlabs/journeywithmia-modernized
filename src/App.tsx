@@ -1,5 +1,7 @@
 import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "sonner";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 import TryForFree from "./pages/TryForFree";
@@ -10,8 +12,19 @@ import PrivateSittings from "./pages/PrivateSittings";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
 import NotFound from "./pages/NotFound";
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,   // 5 min
+      gcTime: 30 * 60 * 1000,      // 30 min cache
+      retry: 1,
+    },
+  },
+});
+
 function App() {
   return (
+    <QueryClientProvider client={queryClient}>
     <ErrorBoundary>
       <BrowserRouter>
         <Routes>
@@ -27,6 +40,8 @@ function App() {
         </Routes>
       </BrowserRouter>
     </ErrorBoundary>
+    <Toaster position="top-center" richColors closeButton />
+    </QueryClientProvider>
   );
 }
 

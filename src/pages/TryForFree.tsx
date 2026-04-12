@@ -21,7 +21,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { CardTestimonial } from "@/components/RotatingTestimonial";
-import { useUpcomingSessions } from "@/hooks/useUpcomingSessions";
+import { useScheduleData, getStockholmSessionDate } from "@/hooks/useScheduleData";
+import { supabase } from "@/integrations/supabase/client";
 import { trackCTAClick } from "@/utils/analytics";
 
 /* ------------------------------------------------------------------ */
@@ -45,17 +46,15 @@ interface FormattedSession {
 }
 
 function useFormattedSessions() {
-  const { data: rawSessions = [] } = useUpcomingSessions();
+  const { classDates } = useScheduleData();
   const userTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const now = new Date();
   const twoHoursOut = new Date(now.getTime() + 2 * 60 * 60 * 1000);
 
   return useMemo(() => {
-    const sessions: FormattedSession[] = rawSessions
-      .map((s, i) => {
-        const dt = s.datetime_sweden
-          ? new Date(s.datetime_sweden)
-          : new Date(`${s.date}T${s.time}:00+02:00`);
+    const sessions: FormattedSession[] = classDates
+      .map((cd) => {
+        const dt = getStockholmSessionDate(cd.isoDate);
 
         if (dt < now) return null;
 
@@ -96,8 +95,8 @@ function useFormattedSessions() {
         });
 
         return {
-          id: s.id,
-          date: s.date,
+          id: cd.isoDate,
+          date: cd.isoDate,
           dateObj: dt,
           swedenDateStr,
           localDateStr,
@@ -106,7 +105,7 @@ function useFormattedSessions() {
           weekday,
           dayNum,
           monthShort,
-          guestTeacher: s.guest_teacher,
+          guestTeacher: cd.hasGuest ? cd.guestName : undefined,
           isEligible,
           isNext: false,
         } as FormattedSession;
@@ -118,7 +117,7 @@ function useFormattedSessions() {
     if (firstEligible) firstEligible.isNext = true;
 
     return sessions;
-  }, [rawSessions, userTz]);
+  }, [classDates, userTz]);
 }
 
 /* ------------------------------------------------------------------ */
@@ -149,17 +148,55 @@ const TryForFree = () => {
     }, 100);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedSession) return;
     setIsSubmitting(true);
     trackCTAClick("Register Free Session", "try-for-free");
 
-    // Simulate form submission (replace with Supabase call when wiring up)
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      // Check eligibility first
+      const { data: eligible, error: eligErr } = await supabase.rpc(
+        'check_try_for_free_eligibility',
+        { check_email: formData.email, check_session_id: selectedSession.id }
+      );
+
+      if (eligErr) throw new Error(eligErr.message);
+
+      const result = eligible as unknown as { eligible: boolean; reason?: string };
+      if (!result.eligible) {
+        throw new Error(result.reason || 'You are not eligible for this session.');
+      }
+
+      // Insert registration
+      const { error: insertErr } = await supabase
+        .from('try_for_free_registrations')
+        .insert({
+          full_name: formData.name,
+          email: formData.email,
+          how_heard_about_us: formData.howHeard || null,
+          session_id: selectedSession.id,
+          session_date: selectedSession.dateObj.toISOString(),
+          session_title: selectedSession.swedenDateStr,
+          ip_address: null,
+          user_agent: navigator.userAgent,
+        });
+
+      if (insertErr) throw new Error(insertErr.message);
+
+      // Trigger email notifications
+      await supabase.functions.invoke('send-try-for-free-emails', {
+        body: { email: formData.email, type: 'confirmation' },
+      });
+
       setFormSubmitted(true);
       setFormData({ name: "", email: "", howHeard: "" });
-    }, 1200);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Registration failed. Please try again.';
+      alert(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const selectedSession = sessions.find((s) => s.id === selectedSessionId);
